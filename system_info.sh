@@ -28,8 +28,15 @@ container_version=""
 
 # system information
 system_cpu_info=""
-system_mem_indo=""
+system_mem_info=""
 system_architecture=""
+
+# system usage
+cpu_usage=""
+mem_usage=""
+swap_usage=""
+disk_usage=""
+load_avarage=""
 
 # network information
 # primary interface = pif
