@@ -11,8 +11,8 @@
 # ============================================================ #
 
 # kernel information
-kernel_name=""
-kernel_version=""
+kernel_name="$(uname -s)"
+kernel_version="$(uname -r)"
 
 # operational system information
 os_name=""
