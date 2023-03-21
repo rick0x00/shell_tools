@@ -15,8 +15,8 @@ kernel_name="$(uname -s)"
 kernel_version="$(uname -r)"
 
 # operational system information
-os_name=""
-os_version=""
+os_name=$(cat /etc/os-release | grep "^NAME=" | awk -F'"' '{print $2}')
+os_version=$(cat /etc/os-release | grep "^VERSION_ID=" | awk -F'"' '{print $2}')
 
 # Continer information
 # containerizer system?
