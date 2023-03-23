@@ -27,9 +27,9 @@ container_name=""
 container_version=""
 
 # system information
-system_cpu_info=""
+system_cpu_info="$(cat /proc/cpuinfo | grep 'model name' | head -n1 | awk -F ': ' '{print $2}')"
 system_mem_info=""
-system_architecture=""
+system_architecture="$(uname -m)"
 
 # system usage
 cpu_usage=""
