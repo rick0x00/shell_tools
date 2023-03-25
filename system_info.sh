@@ -34,7 +34,7 @@ system_architecture="$(uname -m)"
 # system usage
 cpu_usage=""
 mem_usage="$(cat /proc/meminfo | grep 'MemFree' | awk -F' ' '{print $2}')"
-swap_usage=""
+swap_usage="$(cat /proc/meminfo | grep 'SwapFree' | awk -F' ' '{print $2}')"
 disk_usage=""
 load_avarage=""
 
