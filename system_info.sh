@@ -32,7 +32,7 @@ system_mem_info=""
 system_architecture="$(uname -m)"
 
 # system usage
-cpu_usage=""
+cpu_usage="$(top -bn1 | grep 'Cpu(s)' | awk '{print $2+$4+$6}')"
 mem_usage="$(cat /proc/meminfo | grep 'MemFree' | awk -F' ' '{print $2}')"
 swap_usage="$(cat /proc/meminfo | grep 'SwapFree' | awk -F' ' '{print $2}')"
 disk_usage=""
