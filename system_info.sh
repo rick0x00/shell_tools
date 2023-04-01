@@ -36,7 +36,7 @@ cpu_usage="$(top -bn1 | grep 'Cpu(s)' | awk '{print $2+$4+$6}')"
 mem_usage="$(top -bn1 | grep 'MiB Mem' | awk '{print $8}')"
 swap_usage="$(top -bn1 | grep 'MiB Swap' | awk '{print $7}')"
 disk_usage=""
-load_avarage=""
+load_avarage="$(top -bn1 | grep 'load average:' | awk -F 'load average: ' '{print $2}' | awk -F ', ' '{print $1}')"
 
 # network information
 # primary interface = pif
