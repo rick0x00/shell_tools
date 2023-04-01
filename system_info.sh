@@ -33,8 +33,8 @@ system_architecture="$(uname -m)"
 
 # system usage
 cpu_usage="$(top -bn1 | grep 'Cpu(s)' | awk '{print $2+$4+$6}')"
-mem_usage="$(cat /proc/meminfo | grep 'MemFree' | awk -F' ' '{print $2}')"
-swap_usage="$(cat /proc/meminfo | grep 'SwapFree' | awk -F' ' '{print $2}')"
+mem_usage="$(top -bn1 | grep 'MiB Mem' | awk '{print $8}')"
+swap_usage="$(top -bn1 | grep 'MiB Swap' | awk '{print $7}')"
 disk_usage=""
 load_avarage=""
 
