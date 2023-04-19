@@ -44,6 +44,22 @@ function read_cli_args() {
             exit 0;
         fi
         case $1 in
+            ( "-ef"|"--exec-function" )
+                if [ -n "$2" ] && [[ "$2" != -* ]]; then
+                    echo "exec function: $2"
+                    exec_function="$2"
+                    if type $exec_function | grep -q "is a function" ; then
+                        $exec_function;
+                        exit;
+                    else
+                        echo "error: the function \"$exec_function\" is not defined"
+                        local num_arg_errors=$(($num_arg_errors+1));
+                    fi
+                else
+                    echo 'error: function not defined'
+                    local num_arg_errors=$(($num_arg_errors+1));
+                fi
+                ;;
             ( "-os"|"--operational-system" )
                 if [ -n "$2" ] && [[ "$2" != -* ]]; then
                     case $2 in
@@ -109,4 +125,4 @@ function read_cli_args() {
 }
 
 # the command above it used for tests
-# read_cli_args $*
+#read_cli_args $*
