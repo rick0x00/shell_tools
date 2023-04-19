@@ -109,4 +109,4 @@ function read_cli_args() {
 }
 
 # the command above it used for tests
-read_cli_args $*
+# read_cli_args $*
