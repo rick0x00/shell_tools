@@ -10,6 +10,9 @@
 # Remote repository 2: https://gitlab.com/rick0x00/shell_tools #
 # ============================================================ #
 
+source ./project_info.sh
+source ./help.sh
+
 function read_cli_args() {
     local num_arg_errors=0
     while [ -n "$1" ]; do
@@ -84,3 +87,6 @@ function read_cli_args() {
         exit 1;    
     fi
 }
+
+# the command above it used for tests
+read_cli_args $*
