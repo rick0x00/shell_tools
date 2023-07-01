@@ -12,19 +12,26 @@
 
 # kernel information
 kernel_name="$(uname -s)"
-kernel_version="$(uname -r)"
+kernel_release="$(uname -r)"
+
+# machine information
+host_name="$(hostname)"
+host_name=${hostname_name:-"$(uname -n)"}
+host_full_domain="$(hostname -f | awk -F"." '{print $2}')"
 
 # operational system information
-os_name=$(cat /etc/os-release | grep "^NAME=" | awk -F'"' '{print $2}')
-os_version=$(cat /etc/os-release | grep "^VERSION_ID=" | awk -F'"' '{print $2}')
+os_info="$(cat /etc/os-release)"
+os_name=$(cat /etc/os-release | grep "^NAME" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
+os_version=$(cat /etc/os-release | grep "^VERSION_ID" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
+os_codename=$(cat /etc/os-release | grep "^VERSION_CODENAME" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
 
 # Continer information
 # containerizer system?
-containerized=""
-# yes = 1 | true
-# no = 0 | false
-container_name=""
-container_version=""
+if [ -f /.dockerenv ]; then
+    containerized=("yes" "true" "1")
+else
+    containerized=("no" "false" "0")
+fi 
 
 # system information
 system_cpu_info="$(cat /proc/cpuinfo | grep 'model name' | head -n1 | awk -F ': ' '{print $2}')"
