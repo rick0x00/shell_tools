@@ -12,18 +12,24 @@
 
 # kernel information
 kernel_name="$(uname -s)"
+kernel_name=${kernel_name:-"unknown"}
 kernel_release="$(uname -r)"
+kernel_release=${kernel_release:-"unknown"}
 
 # machine information
 host_name="$(hostname)"
 host_name=${hostname_name:-"$(uname -n)"}
+host_name=${host_name:-"unknown"}
 host_full_domain="$(hostname -f | awk -F"." '{print $2}')"
+host_full_domain=${host_full_domain:-"unknown"}
 
 # operational system information
-os_info="$(cat /etc/os-release)"
 os_name=$(cat /etc/os-release | grep "^NAME" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
+os_name=${os_name:-"unknown"}
 os_version=$(cat /etc/os-release | grep "^VERSION_ID" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
+os_version=${os_version:-'unknown'}
 os_codename=$(cat /etc/os-release | grep "^VERSION_CODENAME" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
+os_codename=${os_codename:-"unknown"}
 
 # Continer information
 # containerizer system?
@@ -32,6 +38,7 @@ if [ -f /.dockerenv ]; then
 else
     containerized=("no" "false" "0")
 fi 
+containerized=${containerized:-"unknown"}
 
 # system information
 system_cpu_info="$(cat /proc/cpuinfo | grep 'model name' | head -n1 | awk -F ': ' '{print $2}')"
