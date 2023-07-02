@@ -64,7 +64,7 @@ function continer_info () {
 
 function top_extract () {
     if [ -z "$top_date" ]; then
-        top_date=$(top -bn1 | head -n 6 | tr '\n' '+')
+        top_date=$(top -bn1 | head -n 6 | sed 's/\([[:digit:]]\),\([[:digit:]]\)/\1.\2/g' | tr '\n' '+')
     fi
     echo $top_date | tr '+' '\n'
 }
@@ -87,8 +87,10 @@ function cpu_info () {
 
 function mem_info () {
     mem_stats=$( top_extract | grep '^MiB Mem' | sed "s/^[^:]*://" | sed 's/[[:space:]][[:space:]]\+//g')
+    echo $mem_stats
     mem_total=("$(echo $mem_stats | tr ',' '\n' | grep 'total' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
     mem_total=${mem_total:-"unknown"}
+    echo $mem_total
     mem_free=("$(echo $mem_stats | tr ',' '\n' | grep 'free' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
     mem_free=${mem_free:-"unknown"}
     mem_used=("$(echo $mem_stats | tr ',' '\n' | grep 'used' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
