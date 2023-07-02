@@ -41,9 +41,32 @@ fi
 containerized=${containerized:-"unknown"}
 
 # system information
-system_cpu_info="$(cat /proc/cpuinfo | grep 'model name' | head -n1 | awk -F ': ' '{print $2}')"
-system_mem_info=""
 system_architecture="$(uname -m)"
+
+cpu_model="$(cat /proc/cpuinfo | grep '^model name' | head -n1 | awk -F ':[[:space:]]' '{print $2}' | sed 's/\@[[:space:]]//')"
+cpu_model=${cpu_model:-"unknown"}
+
+mem_info=$(top -bn1 | head -n 6 | grep '^MiB Mem' | sed "s/^[^:]*://" | sed 's/\(\w\+\)\. /\1,/g' | sed 's/[[:space:]][[:space:]]\+//g')
+mem_total=("$(echo $mem_info | tr ',' '\n' | grep 'total' | sed -e 's/[^[:digit:]]*$//g' | tr -d '\n')" "Mb")
+mem_total=${mem_total:-"unknown"}
+mem_free=("$(echo $mem_info | tr ',' '\n' | grep 'free' | sed -e 's/[^[:digit:]]*$//g' | tr -d '\n')" "Mb")
+mem_free=${mem_free:-"unknown"}
+mem_used=("$(echo $mem_info | tr ',' '\n' | grep 'used' | sed -e 's/[^[:digit:]]*$//g' | tr -d '\n')" "Mb")
+mem_used=${mem_used:-"unknown"}
+mem_cached=("$(echo $mem_info | tr ',' '\n' | grep 'cache' | sed -e 's/[^[:digit:]]*$//g' | tr -d '\n')" "Mb")
+mem_cached=${mem_cached:-"unknown"}
+echo -e "Memory Info: \nTotal: ${mem_total[@]} \nFree: ${mem_free[@]} \nUsed: ${mem_used[@]} \nCached: ${mem_cached[@]}"
+
+swap_info=$(top -bn1 | head -n 6 | grep '^MiB Swap' | sed "s/^[^:]*://" | sed 's/\(\w\+\)\. /\1,/g' | sed 's/[[:space:]][[:space:]]\+//g')
+swap_total=("$(echo $swap_info | tr ',' '\n' | grep 'total' | sed -e 's/[^[:digit:]]*$//g' | tr -d '\n')" "Mb")
+swap_total=${swap_total:-"unknown"}
+swap_free=("$(echo $swap_info | tr ',' '\n' | grep 'free' | sed -e 's/[^[:digit:]]*$//g' | tr -d '\n')" "Mb")
+swap_free=${swap_free:-"unknown"}
+swap_used=("$(echo $swap_info | tr ',' '\n' | grep 'used' | sed -e 's/[^[:digit:]]*$//g' | tr -d '\n')" "Mb")
+swap_used=${swap_used:-"unknown"}
+swap_avail=("$(echo $swap_info | tr ',' '\n' | grep 'avail' | sed -e 's/[^[:digit:]]*$//g' | tr -d '\n')" "Mb")
+swap_avail=${swap_avail:-"unknown"}
+echo -e "Memory Info: \nTotal: ${swap_total[@]} \nFree: ${swap_free[@]} \nUsed: ${swap_used[@]} \nAvail: ${swap_avail[@]}"
 
 # system usage
 cpu_usage="$(top -bn1 | grep 'Cpu(s)' | awk '{print $2+$4+$6}')"
