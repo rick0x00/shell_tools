@@ -164,12 +164,12 @@ function network_info () {
         if [ -n "$if_finded_ipv4" ]; then
             net_pif_name=$if_finded_name
             net_pif_ipv4=("$(echo $if_finded_ipv4 | sed 's/\/[^\/]*$//')" "$(echo $if_finded_ipv4 | sed 's/^[^\/]*\///')")
-            net_pif_ipv6=$($if_finded_ipv6)
+            net_pif_ipv6=("$(echo $if_finded_ipv6 | sed 's/\/[^\/]*$//')" "$(echo $if_finded_ipv6 | sed 's/^[^\/]*\///')")
             break
         fi
     done
     if [ "$1" == "show" ]; then
-        echo -e "Network: \n  Primary finded interface: $net_pif_name \n  IPv4: ${net_pif_ipv4[0]}/${net_pif_ipv4[1]} \n  IPv6: ${net_pif_ipv6:-"undefined"}"
+        echo -e "Network: \n  Primary finded interface: $net_pif_name \n  IPv4: ${net_pif_ipv4[0]}/${net_pif_ipv4[1]} \n  IPv6: ${net_pif_ipv6[0]}/${net_pif_ipv6[1]}"
     fi
 }
 
