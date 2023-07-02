@@ -62,7 +62,7 @@ function continer_info () {
     fi
 }
 
-function data_extract () {
+function top_extract () {
     if [ -z "$top_date" ]; then
         top_date=$(top -bn1 | head -n 6 | tr '\n' '+')
     fi
@@ -70,20 +70,23 @@ function data_extract () {
 }
 
 function cpu_info () {
-    cpu_architecture="$(uname -m)"
+    cpu_architecture=$(lscpu | grep '^[A,a]rchitecture:' | head -n1 | sed 's/^[^:]*://' | sed 's/^[[:blank:]]*//')
     cpu_architecture=${cpu_architecture:-"unknown"}
-    cpu_model=$(cat /proc/cpuinfo | grep '^model name' | head -n1 | awk -F ':[[:space:]]' '{print $2}' | sed 's/\@[[:space:]]//')
+    cpu_model=$(lscpu | grep '^[M,m]odel name' | head -n1 | sed 's/^[^:]*://' | sed 's/^[[:blank:]]*//' | sed 's/\@[[:space:]]//')
     cpu_model=${cpu_model:-"unknown"}
-    cpu_stats=$( data_extract | grep 'Cpu(s)' | sed 's/^[^:]*://' | sed 's/[[:space:]][[:space:]]\+//g' )
+    cpu_virtualization=$(lscpu | grep '^[V,v]irtualization:' | head -n1 | sed 's/^[^:]*://' | sed 's/^[[:blank:]]*//')
+    cpu_virtualization=${cpu_virtualization:-"unavailable"}
+    cpu_stats=$( top_extract | grep 'Cpu(s)' | sed 's/^[^:]*://' | sed 's/[[:space:]][[:space:]]\+//g' )
     cpu_idle=$(echo $cpu_stats | tr ',' '\n' | grep 'id' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')
+    cpu_idle=${cpu_idle:-"unknown"}
     cpu_usage=("$(echo 100 $cpu_idle | awk '{print $1 - $2 }')" "%")
     if [ "$1" == "show" ]; then
-        echo -e "CPU Info: \n  Model: $cpu_model \n  Architecture: $cpu_architecture \n  Usage: ${cpu_usage[@]}"
+        echo -e "CPU Info: \n  Model: $cpu_model \n  Architecture: $cpu_architecture \n  Virtualization: $cpu_virtualization \n  Usage: ${cpu_usage[@]}"
     fi
 }
 
 function mem_info () {
-    mem_stats=$( data_extract | grep '^MiB Mem' | sed "s/^[^:]*://" | sed 's/[[:space:]][[:space:]]\+//g')
+    mem_stats=$( top_extract | grep '^MiB Mem' | sed "s/^[^:]*://" | sed 's/[[:space:]][[:space:]]\+//g')
     mem_total=("$(echo $mem_stats | tr ',' '\n' | grep 'total' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
     mem_total=${mem_total:-"unknown"}
     mem_free=("$(echo $mem_stats | tr ',' '\n' | grep 'free' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
@@ -99,7 +102,7 @@ function mem_info () {
 }
 
 function swap_info () {
-    swap_stats=$( data_extract | grep '^MiB Swap' | sed "s/^[^:]*://" | sed 's/\(\w\+\)\. /\1,/g' | sed 's/[[:space:]][[:space:]]\+//g')
+    swap_stats=$( top_extract | grep '^MiB Swap' | sed "s/^[^:]*://" | sed 's/\(\w\+\)\. /\1,/g' | sed 's/[[:space:]][[:space:]]\+//g')
     swap_total=("$(echo $swap_stats | tr ',' '\n' | grep 'total' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g'  | tr -d '\n')" "Mb")
     swap_total=${swap_total:-"unknown"}
     swap_free=("$(echo $swap_stats | tr ',' '\n' | grep 'free' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
@@ -129,13 +132,20 @@ function disk_info () {
 }
 
 function load_info () {
-    sys_load_stats=$(uptime | grep -o 'load average.*$' | sed 's/^[^:]*://' | sed 's/[[:space:]][[:space:]]\+//g' | tr ',' ' ' )
+    sys_load_stats=$( top_extract | grep -o 'load average.*$' | sed 's/^[^:]*://' | sed 's/[[:space:]][[:space:]]\+//g' | tr ',' ' ' )
     sys_load_1min=("$(echo $sys_load_stats  | awk '{print $1}')" "%")
     sys_load_5min=("$(echo $sys_load_stats  | awk '{print $2}')" "%")
     sys_load_15min=("$(echo $sys_load_stats  | awk '{print $3}')" "%")
     load_avarage=${sys_load_1min[@]}
     if [ "$1" == "show" ]; then
         echo -e "Load Average: \n  last 1 minute: ${sys_load_1min[@]} \n  last 5 minute: ${sys_load_5min[@]} \n  last 15 minute: ${sys_load_15min[@]}"
+    fi
+}
+
+function uptime_info () {
+    host_uptime=$( top_extract | grep -o 'up[^,]*' | sed 's/up//' | sed -e 's/[[:space:]]//g' | tr -d '\n')
+    if [ "$1" == "show" ]; then
+        echo "Uptime: $host_uptime"
     fi
 }
 
@@ -150,11 +160,11 @@ function system_info () {
     swap_info $1
     disk_info  $1
     load_info  $1
+    uptime_info $1
 }
 
 system_info "show"
 
-uptime
 virtualization
 
 # network information
