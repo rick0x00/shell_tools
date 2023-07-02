@@ -10,88 +10,125 @@
 # Remote repository 2: https://gitlab.com/rick0x00/shell_tools #
 # ============================================================ #
 
-# kernel information
-kernel_name="$(uname -s)"
-kernel_name=${kernel_name:-"unknown"}
-kernel_release="$(uname -r)"
-kernel_release=${kernel_release:-"unknown"}
+function kernel_info() {
+    # kernel information
+    kernel_name="$(uname -s)"
+    kernel_name=${kernel_name:-"unknown"}
+    kernel_release="$(uname -r)"
+    kernel_release=${kernel_release:-"unknown"}
+    echo -e "Kernel info: \n  Name: $kernel_name \n  Release: $kernel_release"
+}
 
-# machine information
-host_name="$(hostname)"
-host_name=${hostname_name:-"$(uname -n)"}
-host_name=${host_name:-"unknown"}
-host_full_domain="$(hostname -f | awk -F"." '{print $2}')"
-host_full_domain=${host_full_domain:-"unknown"}
+function host_info() {
+    # machine information
+    host_name="$(hostname)"
+    host_name=${hostname_name:-"$(uname -n)"}
+    host_name=${host_name:-"unknown"}
+    host_full_domain=.$(hostname -f | awk -F"." '{print $2}').
+    host_full_domain=${host_full_domain:-"unknown"}
+    echo -e "Host Info: \n  name: $host_name \n  full domain: $host_full_domain"
+}
 
-# operational system information
-os_name=$(cat /etc/os-release | grep "^NAME" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
-os_name=${os_name:-"unknown"}
-os_version=$(cat /etc/os-release | grep "^VERSION_ID" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
-os_version=${os_version:-'unknown'}
-os_codename=$(cat /etc/os-release | grep "^VERSION_CODENAME" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
-os_codename=${os_codename:-"unknown"}
+function os_info () {
+    # operational system information
+    os_name=$(cat /etc/os-release | grep "^NAME" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
+    os_name=${os_name:-"unknown"}
+    os_version=$(cat /etc/os-release | grep "^VERSION_ID" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
+    os_version=${os_version:-'unknown'}
+    os_codename=$(cat /etc/os-release | grep "^VERSION_CODENAME" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
+    os_codename=${os_codename:-"unknown"}
+    echo -e "Operational system info: \n  Name: $os_name \n  Version: $os_version \n  Codename: $os_codename"
+}
 
-# Continer information
-# containerizer system?
-if [ -f /.dockerenv ]; then
-    containerized=("yes" "true" "1")
-else
-    containerized=("no" "false" "0")
-fi 
-containerized=${containerized:-"unknown"}
+function continer_info () {
+    # Continer information
+    # containerizer system?
+    if [ -f /.dockerenv ]; then
+        containerized=("yes" "true" "1")
+        container_technology="docker"
+    else
+        containerized=("no" "false" "0")
+        container_technology="unknown"
+    fi 
+    containerized=${containerized:-"unknown"}
+    echo -e "Container Info: \n  Inside Container: $containerized \n  Container technology: $container_technology"
+}
 
-# system information
-system_architecture="$(uname -m)"
+function cpu_info () {
+    cpu_architecture="$(uname -m)"
+    cpu_architecture=${cpu_architecture:-"unknown"}
+    cpu_model=$(cat /proc/cpuinfo | grep '^model name' | head -n1 | awk -F ':[[:space:]]' '{print $2}' | sed 's/\@[[:space:]]//')
+    cpu_model=${cpu_model:-"unknown"}
+    cpu_stats=$(top -bn1 | head -n 6 | grep 'Cpu(s)' | sed 's/^[^:]*://' | sed 's/[[:space:]][[:space:]]\+//g' )
+    cpu_idle=$(echo $cpu_stats | tr ',' '\n' | grep 'id' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')
+    cpu_usage=("$(echo 100 $cpu_idle | awk '{print $1 - $2 }')" "%")
+    echo -e "CPU Info: \n  Model: $cpu_model \n  Architecture: $cpu_architecture \n  Usage: ${cpu_usage[@]}"
+}
 
-cpu_model=$(cat /proc/cpuinfo | grep '^model name' | head -n1 | awk -F ':[[:space:]]' '{print $2}' | sed 's/\@[[:space:]]//')
-cpu_model=${cpu_model:-"unknown"}
-cpu_stats=$(top -bn1 | head -n 6 | grep 'Cpu(s)' | sed 's/^[^:]*://' | sed 's/[[:space:]][[:space:]]\+//g' )
-cpu_idle=$(echo $cpu_stats | tr ',' '\n' | grep 'id' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')
+function mem_info () {
+    mem_stats=$(top -bn1 | head -n 6 | grep '^MiB Mem' | sed "s/^[^:]*://" | sed 's/[[:space:]][[:space:]]\+//g')
+    mem_total=("$(echo $mem_stats | tr ',' '\n' | grep 'total' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
+    mem_total=${mem_total:-"unknown"}
+    mem_free=("$(echo $mem_stats | tr ',' '\n' | grep 'free' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
+    mem_free=${mem_free:-"unknown"}
+    mem_used=("$(echo $mem_stats | tr ',' '\n' | grep 'used' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
+    mem_used=${mem_used:-"unknown"}
+    mem_cached=("$(echo $mem_stats | tr ',' '\n' | grep 'cache' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
+    mem_cached=${mem_cached:-"unknown"}
+    mem_usage=("$(echo $mem_used $mem_total | awk '{ printf "%.2f", ( $1 / $2 ) * 100 }')" "%")
+    echo -e "Memory Info: \n  Total: ${mem_total[@]} \n  Free: ${mem_free[@]} \n  Used: ${mem_used[@]} ${mem_usage[@]} \n  Cached: ${mem_cached[@]}"
+}
 
+function swap_info () {
+    swap_stats=$(top -bn1 | head -n 6 | grep '^MiB Swap' | sed "s/^[^:]*://" | sed 's/\(\w\+\)\. /\1,/g' | sed 's/[[:space:]][[:space:]]\+//g')
+    swap_total=("$(echo $swap_stats | tr ',' '\n' | grep 'total' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g'  | tr -d '\n')" "Mb")
+    swap_total=${swap_total:-"unknown"}
+    swap_free=("$(echo $swap_stats | tr ',' '\n' | grep 'free' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
+    swap_free=${swap_free:-"unknown"}
+    swap_used=("$(echo $swap_stats | tr ',' '\n' | grep 'used' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
+    swap_used=${swap_used:-"unknown"}
+    swap_avail=("$(echo $swap_stats | tr ',' '\n' | grep 'avail' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
+    swap_avail=${swap_avail:-"unknown"}
+    swap_usage=("$(echo $swap_used $swap_total | awk '{ printf "%.2f", ( $1 / $2 ) * 100 }')" "%")
+    echo -e "Swap Info: \n  Total: ${swap_total[@]} \n  Free: ${swap_free[@]} \n  Used: ${swap_used[@]} ${swap_usage[@]} \n  Avail: ${swap_avail[@]}"
+}
 
-mem_stats=$(top -bn1 | head -n 6 | grep '^MiB Mem' | sed "s/^[^:]*://" | sed 's/[[:space:]][[:space:]]\+//g')
-mem_total=("$(echo $mem_stats | tr ',' '\n' | grep 'total' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
-mem_total=${mem_total:-"unknown"}
-mem_free=("$(echo $mem_stats | tr ',' '\n' | grep 'free' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
-mem_free=${mem_free:-"unknown"}
-mem_used=("$(echo $mem_stats | tr ',' '\n' | grep 'used' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
-mem_used=${mem_used:-"unknown"}
-mem_cached=("$(echo $mem_stats | tr ',' '\n' | grep 'cache' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
-mem_cached=${mem_cached:-"unknown"}
-echo -e "Memory Info: \nTotal: ${mem_total[@]} \nFree: ${mem_free[@]} \nUsed: ${mem_used[@]} \nCached: ${mem_cached[@]}"
+function disk_info () {
+    disk_stats=$(df -h | grep '/$')
+    disk_filesystem=$(echo $disk_stats | awk '{print $1}')
+    disk_size=$(echo $disk_stats | awk '{print $2}')
+    disk_used=$(echo $disk_stats | awk '{print $3}')
+    disk_avail=$(echo $disk_stats | awk '{print $4}')
+    disk_use_percent=$(echo $disk_stats | awk '{print $5}' | sed 's/\%//')
+    disk_mounted_point=$(echo $disk_stats | awk '{print $6}')
+    disk_usage=("$disk_use_percent" "%")
+    echo -e "Disk info: \n  Filesystem: $disk_filesystem \n  Mounted Point: $disk_mounted_point \n  Size: $disk_size \n  Avail: $disk_avail \n  Used: ${disk_usage[@]}"
+}
 
-swap_stats=$(top -bn1 | head -n 6 | grep '^MiB Swap' | sed "s/^[^:]*://" | sed 's/\(\w\+\)\. /\1,/g' | sed 's/[[:space:]][[:space:]]\+//g')
-swap_total=("$(echo $swap_stats | tr ',' '\n' | grep 'total' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g'  | tr -d '\n')" "Mb")
-swap_total=${swap_total:-"unknown"}
-swap_free=("$(echo $swap_stats | tr ',' '\n' | grep 'free' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
-swap_free=${swap_free:-"unknown"}
-swap_used=("$(echo $swap_stats | tr ',' '\n' | grep 'used' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
-swap_used=${swap_used:-"unknown"}
-swap_avail=("$(echo $swap_stats | tr ',' '\n' | grep 'avail' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
-swap_avail=${swap_avail:-"unknown"}
-#echo -e "Swap Info: \nTotal: ${swap_total[@]} \nFree: ${swap_free[@]} \nUsed: ${swap_used[@]} \nAvail: ${swap_avail[@]}"
+function load_info () {
+    sys_load_stats=$(uptime | grep -o 'load average.*$' | sed 's/^[^:]*://' | sed 's/[[:space:]][[:space:]]\+//g' | tr ',' ' ' )
+    sys_load_1min=("$(echo $sys_load_stats  | awk '{print $1}')" "%")
+    sys_load_5min=("$(echo $sys_load_stats  | awk '{print $2}')" "%")
+    sys_load_15min=("$(echo $sys_load_stats  | awk '{print $3}')" "%")
+    load_avarage=${sys_load_1min[@]}
+    echo -e "Load Average: \n  last 1 minute: ${sys_load_1min[@]} \n  last 5 minute: ${sys_load_5min[@]} \n  last 15 minute: ${sys_load_15min[@]}"
+}
 
-disk_stats=$(df -h | grep '/$')
-disk_filesystem=$(echo $disk_stats | awk '{print $1}')
-disk_size=$(echo $disk_stats | awk '{print $2}')
-disk_used=$(echo $disk_stats | awk '{print $3}')
-disk_avail=$(echo $disk_stats | awk '{print $4}')
-disk_use_percent=$(echo $disk_stats | awk '{print $5}')
-disk_mounted_point=$(echo $disk_stats | awk '{print $6}')
-#echo -e "Disk Stats: \nDisk Filesystem: $disk_filesystem \nDisk Mounted point: $disk_mounted_point \nDisk size: $disk_size \nDisk avail: $disk_avail \nDisk used: $disk_used \nDisk Use Percent: $disk_use_percent"
+function system_info () {
+    # system usage
+    kernel_info
+    host_info
+    os_info
+    continer_info
+    cpu_info
+    mem_info
+    swap_info
+    disk_info
+    load_info
+}
 
-sys_load_stats=$(uptime | grep -o 'load average.*$' | sed 's/^[^:]*://' | sed 's/[[:space:]][[:space:]]\+//g' | tr ',' ' ' )
-sys_load_1min=("$(echo $sys_load_stats  | awk '{print $1}')" "%")
-sys_load_5min=("$(echo $sys_load_stats  | awk '{print $2}')" "%")
-sys_load_15min=("$(echo $sys_load_stats  | awk '{print $3}')" "%")
-#echo -e "Load Average: \nlast 1 minute: $sys_load_1min \nlast 5 minute: $sys_load_5min \nlast 15 minute: $sys_load_15min"
+system_info
 
-# system usage
-cpu_usage=("$(echo 100 $cpu_idle | awk '{print $1 - $2 }')" "%")
-mem_usage=("$(echo $mem_used $mem_total | awk '{ printf "%.2f", ( $1 / $2 ) * 100 }')" "%")
-swap_usage=("$(echo $swap_used $swap_total | awk '{ printf "%.2f", ( $1 / $2 ) * 100 }')" "%")
-disk_usage="$disk_use_percent"
-load_avarage=$sys_load_1min
 
 # network information
 # primary interface = pif
