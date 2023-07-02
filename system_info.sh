@@ -16,7 +16,9 @@ function kernel_info() {
     kernel_name=${kernel_name:-"unknown"}
     kernel_release="$(uname -r)"
     kernel_release=${kernel_release:-"unknown"}
-    echo -e "Kernel info: \n  Name: $kernel_name \n  Release: $kernel_release"
+    if [ "$1" == "show" ]; then
+            echo -e "Kernel info: \n  Name: $kernel_name \n  Release: $kernel_release"
+    fi
 }
 
 function host_info() {
@@ -26,7 +28,9 @@ function host_info() {
     host_name=${host_name:-"unknown"}
     host_full_domain=.$(hostname -f | awk -F"." '{print $2}').
     host_full_domain=${host_full_domain:-"unknown"}
-    echo -e "Host Info: \n  name: $host_name \n  full domain: $host_full_domain"
+    if [ "$1" == "show" ]; then
+        echo -e "Host Info: \n  name: $host_name \n  full domain: $host_full_domain"
+    fi
 }
 
 function os_info () {
@@ -37,7 +41,9 @@ function os_info () {
     os_version=${os_version:-'unknown'}
     os_codename=$(cat /etc/os-release | grep "^VERSION_CODENAME" | awk -F'=' '{print $2}' | sed -s "s/\"//g")
     os_codename=${os_codename:-"unknown"}
-    echo -e "Operational system info: \n  Name: $os_name \n  Version: $os_version \n  Codename: $os_codename"
+    if [ "$1" == "show" ]; then
+        echo -e "Operational system info: \n  Name: $os_name \n  Version: $os_version \n  Codename: $os_codename"
+    fi
 }
 
 function continer_info () {
@@ -51,7 +57,9 @@ function continer_info () {
         container_technology="unknown"
     fi 
     containerized=${containerized:-"unknown"}
-    echo -e "Container Info: \n  Inside Container: $containerized \n  Container technology: $container_technology"
+    if [ "$1" == "show" ]; then
+        echo -e "Container Info: \n  Inside Container: $containerized \n  Container technology: $container_technology"
+    fi
 }
 
 function cpu_info () {
@@ -62,7 +70,9 @@ function cpu_info () {
     cpu_stats=$(top -bn1 | head -n 6 | grep 'Cpu(s)' | sed 's/^[^:]*://' | sed 's/[[:space:]][[:space:]]\+//g' )
     cpu_idle=$(echo $cpu_stats | tr ',' '\n' | grep 'id' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')
     cpu_usage=("$(echo 100 $cpu_idle | awk '{print $1 - $2 }')" "%")
-    echo -e "CPU Info: \n  Model: $cpu_model \n  Architecture: $cpu_architecture \n  Usage: ${cpu_usage[@]}"
+    if [ "$1" == "show" ]; then
+        echo -e "CPU Info: \n  Model: $cpu_model \n  Architecture: $cpu_architecture \n  Usage: ${cpu_usage[@]}"
+    fi
 }
 
 function mem_info () {
@@ -76,7 +86,9 @@ function mem_info () {
     mem_cached=("$(echo $mem_stats | tr ',' '\n' | grep 'cache' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
     mem_cached=${mem_cached:-"unknown"}
     mem_usage=("$(echo $mem_used $mem_total | awk '{ printf "%.2f", ( $1 / $2 ) * 100 }')" "%")
-    echo -e "Memory Info: \n  Total: ${mem_total[@]} \n  Free: ${mem_free[@]} \n  Used: ${mem_used[@]} ${mem_usage[@]} \n  Cached: ${mem_cached[@]}"
+    if [ "$1" == "show" ]; then
+        echo -e "Memory Info: \n  Total: ${mem_total[@]} \n  Free: ${mem_free[@]} \n  Used: ${mem_used[@]} ${mem_usage[@]} \n  Cached: ${mem_cached[@]}"
+    fi
 }
 
 function swap_info () {
@@ -90,7 +102,9 @@ function swap_info () {
     swap_avail=("$(echo $swap_stats | tr ',' '\n' | grep 'avail' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
     swap_avail=${swap_avail:-"unknown"}
     swap_usage=("$(echo $swap_used $swap_total | awk '{ printf "%.2f", ( $1 / $2 ) * 100 }')" "%")
-    echo -e "Swap Info: \n  Total: ${swap_total[@]} \n  Free: ${swap_free[@]} \n  Used: ${swap_used[@]} ${swap_usage[@]} \n  Avail: ${swap_avail[@]}"
+    if [ "$1" == "show" ]; then
+        echo -e "Swap Info: \n  Total: ${swap_total[@]} \n  Free: ${swap_free[@]} \n  Used: ${swap_used[@]} ${swap_usage[@]} \n  Avail: ${swap_avail[@]}"
+    fi
 }
 
 function disk_info () {
@@ -102,7 +116,9 @@ function disk_info () {
     disk_use_percent=$(echo $disk_stats | awk '{print $5}' | sed 's/\%//')
     disk_mounted_point=$(echo $disk_stats | awk '{print $6}')
     disk_usage=("$disk_use_percent" "%")
-    echo -e "Disk info: \n  Filesystem: $disk_filesystem \n  Mounted Point: $disk_mounted_point \n  Size: $disk_size \n  Avail: $disk_avail \n  Used: ${disk_usage[@]}"
+    if [ "$1" == "show" ]; then
+        echo -e "Disk info: \n  Filesystem: $disk_filesystem \n  Mounted Point: $disk_mounted_point \n  Size: $disk_size \n  Avail: $disk_avail \n  Used: ${disk_usage[@]}"
+    fi
 }
 
 function load_info () {
@@ -111,23 +127,25 @@ function load_info () {
     sys_load_5min=("$(echo $sys_load_stats  | awk '{print $2}')" "%")
     sys_load_15min=("$(echo $sys_load_stats  | awk '{print $3}')" "%")
     load_avarage=${sys_load_1min[@]}
-    echo -e "Load Average: \n  last 1 minute: ${sys_load_1min[@]} \n  last 5 minute: ${sys_load_5min[@]} \n  last 15 minute: ${sys_load_15min[@]}"
+    if [ "$1" == "show" ]; then
+        echo -e "Load Average: \n  last 1 minute: ${sys_load_1min[@]} \n  last 5 minute: ${sys_load_5min[@]} \n  last 15 minute: ${sys_load_15min[@]}"
+    fi
 }
 
 function system_info () {
     # system usage
-    kernel_info
-    host_info
-    os_info
-    continer_info
-    cpu_info
-    mem_info
-    swap_info
-    disk_info
-    load_info
+    kernel_info $1
+    host_info $1
+    os_info $1
+    continer_info $1
+    cpu_info $1
+    mem_info $1
+    swap_info $1
+    disk_info  $1
+    load_info  $1
 }
 
-system_info
+system_info "show"
 
 
 # network information
