@@ -111,7 +111,9 @@ function swap_info () {
     swap_used=${swap_used:-"unknown"}
     swap_avail=("$(echo $swap_stats | tr ',' '\n' | grep 'avail' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
     swap_avail=${swap_avail:-"unknown"}
-    swap_usage=("$(echo $swap_used $swap_total | awk '{ printf "%.2f", ( $1 / $2 ) * 100 }')" "%")
+    if [ "0" != "$swap_total" ] || [ "0" != "$swap_used" ]; then
+        swap_usage=("$(echo $swap_used $swap_total | awk '{ printf "%.2f", ( $1 / $2 ) * 100 }')" "%")
+    fi
     if [ "$1" == "show" ]; then
         echo -e "Swap Info: \n  Total: ${swap_total[@]} \n  Free: ${swap_free[@]} \n  Used: ${swap_used[@]} ${swap_usage[@]} \n  Avail: ${swap_avail[@]}"
     fi
