@@ -62,12 +62,19 @@ function continer_info () {
     fi
 }
 
+function data_extract () {
+    if [ -z "$top_date" ]; then
+        top_date=$(top -bn1 | head -n 6 | tr '\n' '+')
+    fi
+    echo $top_date | tr '+' '\n'
+}
+
 function cpu_info () {
     cpu_architecture="$(uname -m)"
     cpu_architecture=${cpu_architecture:-"unknown"}
     cpu_model=$(cat /proc/cpuinfo | grep '^model name' | head -n1 | awk -F ':[[:space:]]' '{print $2}' | sed 's/\@[[:space:]]//')
     cpu_model=${cpu_model:-"unknown"}
-    cpu_stats=$(top -bn1 | head -n 6 | grep 'Cpu(s)' | sed 's/^[^:]*://' | sed 's/[[:space:]][[:space:]]\+//g' )
+    cpu_stats=$( data_extract | grep 'Cpu(s)' | sed 's/^[^:]*://' | sed 's/[[:space:]][[:space:]]\+//g' )
     cpu_idle=$(echo $cpu_stats | tr ',' '\n' | grep 'id' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')
     cpu_usage=("$(echo 100 $cpu_idle | awk '{print $1 - $2 }')" "%")
     if [ "$1" == "show" ]; then
@@ -76,7 +83,7 @@ function cpu_info () {
 }
 
 function mem_info () {
-    mem_stats=$(top -bn1 | head -n 6 | grep '^MiB Mem' | sed "s/^[^:]*://" | sed 's/[[:space:]][[:space:]]\+//g')
+    mem_stats=$( data_extract | grep '^MiB Mem' | sed "s/^[^:]*://" | sed 's/[[:space:]][[:space:]]\+//g')
     mem_total=("$(echo $mem_stats | tr ',' '\n' | grep 'total' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
     mem_total=${mem_total:-"unknown"}
     mem_free=("$(echo $mem_stats | tr ',' '\n' | grep 'free' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
@@ -92,7 +99,7 @@ function mem_info () {
 }
 
 function swap_info () {
-    swap_stats=$(top -bn1 | head -n 6 | grep '^MiB Swap' | sed "s/^[^:]*://" | sed 's/\(\w\+\)\. /\1,/g' | sed 's/[[:space:]][[:space:]]\+//g')
+    swap_stats=$( data_extract | grep '^MiB Swap' | sed "s/^[^:]*://" | sed 's/\(\w\+\)\. /\1,/g' | sed 's/[[:space:]][[:space:]]\+//g')
     swap_total=("$(echo $swap_stats | tr ',' '\n' | grep 'total' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g'  | tr -d '\n')" "Mb")
     swap_total=${swap_total:-"unknown"}
     swap_free=("$(echo $swap_stats | tr ',' '\n' | grep 'free' | sed -e 's/[^[:digit:]]*$//g' | sed -e 's/[[:space:]]//g' | tr -d '\n')" "Mb")
@@ -147,6 +154,8 @@ function system_info () {
 
 system_info "show"
 
+uptime
+virtualization
 
 # network information
 # primary interface = pif
