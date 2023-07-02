@@ -165,8 +165,6 @@ function system_info () {
 
 system_info "show"
 
-virtualization
-
 # network information
 # primary interface = pif
 net_pif_name=""
