@@ -68,5 +68,50 @@ function name_resolution_test () {
 	# $name_resolution_result is result, "SUCCESS" OR "ERROR"
 }
 
+function my_public_ip_identification () {
+	echo "MY PUBLIC IP IDENTIFICATION"
+
+	# check if internet connection is tested
+	if [ -z "$internet_connection_result" ]; then
+		echo "Internet connection not teinternet_connection_resultsted before"
+		internet_connection_test
+	fi
+
+	# check if name resolution is tested
+	if [ -z "$name_resolution_result" ]; then
+		echo "Name resolution not tested before"
+		name_resolution_test
+	fi
+
+	# set default values of variables
+	my_public_ip[0]="unknown"
+	my_public_ip[1]="unknown"
+
+	# Discovering My Public IPv4
+	if [ -n "${internet_connection_result[1]}" ]; then
+		my_public_ipv4=$(curl -4 -s https://api.ipify.org)
+		if [ -n "$my_public_ipv4" ]; then
+			my_public_ip[0]="$my_public_ipv4"
+		fi
+		unset my_public_ipv4
+		echo "  IPv4: ${my_public_ip[0]}"
+	fi
+
+	# Discovering my public IPv6
+	if [ -n "${internet_connection_result[2]}" ]; then
+		my_public_ipv6=$(curl -6 -s https://api6.ipify.org)
+		if [ -n "$my_public_ipv6" ]; then
+			my_public_ip[1]="$my_public_ipv6"
+		fi
+		unset my_public_ipv6
+		echo "  IPv6: ${my_public_ip[1]}"
+	fi
+
+	# variable "my_public_ip" contains resume of this function
+	# ${my_public_ip[0]}" is the IPv4 address, if available
+	# ${my_public_ip[1]}" is the IPv6 address, if available
+}
+
 internet_connection_test
 name_resolution_test
+my_public_ip_identification
