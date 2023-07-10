@@ -10,6 +10,14 @@
 # Remote repository 2: https://gitlab.com/rick0x00/shell_tools #
 # ============================================================ #
 
+function check_package_installed () {
+	#echo "Checking $1 package installed"
+	if ! $(which $1 &> /dev/null) ; then
+		echo "ERROR: '$1' package is not installed"
+		exit 1
+	fi
+}
+
 function internet_connection_test () {
 	echo "INTERNET CONNECTION TEST"
 
@@ -112,6 +120,7 @@ function my_public_ip_identification () {
 	# ${my_public_ip[1]}" is the IPv6 address, if available
 }
 
+check_package_installed curl
 internet_connection_test
 name_resolution_test
 my_public_ip_identification
