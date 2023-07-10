@@ -21,7 +21,7 @@ function check_package_installed () {
 function internet_connection_test () {
 	echo "INTERNET CONNECTION TEST"
 
-    echo -n "  IPv4 Internet: "
+    echo -n "  IPv4: "
 	# Using Google and Cloudflare IPv4 DNS IP addresses for test
 	if $(ping -4 -c 1 8.8.8.8 &> /dev/null) || $(ping -4 -c 1 1.1.1.1 &> /dev/null) ; then
 		ipv4_internet="AVAILABLE"
@@ -30,7 +30,7 @@ function internet_connection_test () {
 	fi
 	echo "$ipv4_internet"
 
-    echo -n "  IPv6 Internet: "
+    echo -n "  IPv6: "
 	# Using Google and Cloudflare IPv6 DNS IP addresses for test
 	if $(ping -6 -c 1 2001:4860:4860::8888 &> /dev/null) || $(ping -6 -c 1 2606:4700:4700::1111 &> /dev/null) ; then
 		ipv6_internet="AVAILABLE"
