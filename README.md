@@ -30,6 +30,10 @@ Basic System Information extrator
 
 ![system_info_preview](/system_info_preview.png)
 
+## [Network Info](/network_info.sh)
+
+![network_info](network_info.png)
+
 ## [Shell UIX](/shell_uix.sh)
 
 All tools manager
