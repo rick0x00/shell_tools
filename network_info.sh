@@ -120,7 +120,53 @@ function my_public_ip_identification () {
 	# ${my_public_ip[1]}" is the IPv6 address, if available
 }
 
+function my_private_ip_identification () {
+	echo "PRIVATE IP IDENTIFICATION"
+
+	# Identification interfaces
+	all_interfaces=$(ip addr show | grep -oE "^[0-9]+: [[:alnum:]]+" | sed 's/://g' | awk '{print $2}')
+	count=0
+	for interface_name in $all_interfaces; do
+		# Obtain interface information
+		interface_info=$(ip addr show dev $interface_name | grep 'global' | tr '\n' '+')
+		interface_ipv4=$(echo $interface_info | tr '+' '\n' | grep 'inet' | awk '{print $2}' | sed 's/ //g')
+		interface_ipv6=$(echo $interface_info | tr '+' '\n' | grep 'inet6' | awk '{print $2}' | sed 's/ //g')
+
+		interface_addr_ipv4[0]=$( echo $interface_ipv4 | cut -d'/' -f 1 )
+		if [ -n "${interface_addr_ipv4[0]}" ]; then
+			interface_addr_ipv4[1]=$( echo $interface_ipv4 | grep -o '/.*' )
+		else
+			interface_addr_ipv4[0]="unknown"
+		fi
+
+		interface_addr_ipv6[0]=$( echo $interface_ipv6 | cut -d'/' -f 1 )
+		if [ -n "${interface_addr_ipv6[0]}" ]; then
+			interface_addr_ipv6[1]=$( echo $interface_ipv6 | grep -o '/.*' )
+		else
+			interface_addr_ipv6[0]="unknown"
+		fi
+
+		my_private_ip_result[$count]="$interface_name+${interface_addr_ipv4[0]}+${interface_addr_ipv4[1]}+${interface_addr_ipv6[0]}+${interface_addr_ipv6[1]}"
+
+		count="$(($count+1))"
+	done
+
+	# show the result
+	count=0
+	for i in ${my_private_ip_result[@]}; do
+		if_name=$(echo ${my_private_ip_result[$count]} | tr '+' '\n' | sed -n '1p')
+		if_ipv4=$(echo ${my_private_ip_result[$count]} | tr '+' '\n' | sed -n '2p')
+		if_ipv6=$(echo ${my_private_ip_result[$count]} | tr '+' '\n' | sed -n '4p')
+
+		echo "  Interface: $if_name "
+		echo "    IPv4: $if_ipv4"
+		echo "    IPv6: $if_ipv6"
+		count="$(($count+1))"
+	done
+}
+
 check_package_installed curl
+my_private_ip_identification
 internet_connection_test
 name_resolution_test
 my_public_ip_identification
