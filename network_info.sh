@@ -163,6 +163,10 @@ function my_private_ip_identification () {
 		echo "    IPv6: $if_ipv6"
 		count="$(($count+1))"
 	done
+
+	# variable "my_private_ip_result" contains resume of this function
+	# "${my_private_ip_result[n]}" Info About "n" network interface, if available
+	# "${my_private_ip_result[n]}" result is "Interface_Name+IPv4_Addr+IPv4_mask+IPv6_Addr+IPv6_mask"(the character '+' is a divisor)
 }
 
 check_package_installed curl
