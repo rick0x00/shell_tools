@@ -44,6 +44,16 @@ byte_value_color="255"
 text_fg_color_8bit="${csi_esc}48;5;${byte_value_color}m" # 8-bit 0-255 values set color
 
 
+r_value_color="255"
+g_value_color="0"
+b_value_color="0"
+text_style_underline_color_rgb="${csi_esc}58;2;${r_value_color};${g_value_color};${b_value_color}m" # 24-bit RGB 0-255 values set color
+text_style_underline_color_24bit="${text_style_underline_color_rgb}"
+
+text_style_off_underline_color="${csi_esc}59m" # turn off underline color
+
+
+
 ### Background Color
 text_bg_color_black="${csi_esc}40m"
 text_bg_color_red="${csi_esc}41m"
@@ -63,8 +73,8 @@ text_bg_color_bright_cyan="${csi_esc}106m"
 text_bg_color_white="${csi_esc}107m"
 
 r_value_color="255"
-g_value_color="255"
-b_value_color="255"
+g_value_color="0"
+b_value_color="0"
 text_bg_color_rgb="${csi_esc}48;2;${r_value_color};${g_value_color};${b_value_color}m" # 24-bit RGB 0-255 values set color
 text_bg_color_24bit="${text_bg_color_rgb}"
 
@@ -72,27 +82,37 @@ byte_value_color="255"
 text_bg_color_8bit="${csi_esc}48;5;${byte_value_color}m" # 8-bit 0-255 values set color
 
 ### style
-text_style_reset="${csi_esc}0m"
+text_style_reset="${csi_esc}0m" # All attributes become turned off
+
 text_style_bold="${csi_esc}1m"
 text_style_faint="${csi_esc}2m"
 text_style_italic="${csi_esc}3m"
 text_style_underline="${csi_esc}4m"
+text_style_overline="${csi_esc}53m" 
 
 text_style_slow_blink="${csi_esc}5m"
 text_style_rapid_blink="${csi_esc}6m"
 
-text_style_on_invert="${csi_esc}7m" # invert color FG with BG
-text_style_on_hide="${csi_esc}8m" # hide text
-text_style_on_strike="${csi_esc}9m" # strike text
+text_style_invert="${csi_esc}7m" # invert color FG with BG
+text_style_hide="${csi_esc}8m" # hide text
+text_style_strike="${csi_esc}9m" # strike text
 
 text_style_double_underline="${csi_esc}21m"
 
-text_style_off_invert="${csi_esc}27m" # revert invert color FG with BG
-text_style_off_hide="${csi_esc}28m" # revert hide text
-text_style_off_strike="${csi_esc}29m" # revert strike text
+text_style_off_bold="${csi_esc}22m" # turn off bold/faint(enable normal intensity)
+text_style_off_italic="${csi_esc}23m" # turn off italic
+text_style_off_underline="${csi_esc}24m" # turn off underline
+text_style_off_overline="${csi_esc}55m" # turn off overline
+
+text_style_off_blink="${csi_esc}25m" # turn off blink
+
+text_style_off_invert="${csi_esc}27m" # turn off invert color FG with BG
+text_style_off_hide="${csi_esc}28m" # turn off hide text
+text_style_off_strike="${csi_esc}29m" # turn off strike text
+
 
 
 ### message
 text_msg="lorem ipsum dolor sit amet"
 
-echo -e "${text_bg_color_rgb} ${text_msg} ${text_style_reset}"
+echo -e " ${text_bg_color_bright_green} ${text_msg} ${csi_esc}102m ${text_msg} ${text_style_reset}"
