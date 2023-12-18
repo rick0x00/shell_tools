@@ -34,6 +34,11 @@ Basic System Information extrator
 
 ![network_info](network_info.png)
 
+## [shell color](/shell_color.sh)
+
+![shell_color](shell_color-execution.png)
+![shell_color_help](shell_color-help.png)
+
 ## [Shell UIX](/shell_uix.sh)
 
 All tools manager
