@@ -169,7 +169,8 @@ function full_help() {
 }
 
 function message_maker() {
-    text_format_function_args="$*"
+    #echo "imputed args: $@"
+    text_format_function_args="$@"
     if [ -z "${text_format_function_args}" ]; then
         echo "Error, no options specified"
         short_help;
@@ -193,86 +194,86 @@ function message_maker() {
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_white}"
                             shift
-                            ;;                    
+                        ;;                    
                         ([Bb][Ll][Aa][Cc][Kk])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_black}"
                             shift
-                            ;;
+                        ;;
                         ([Rr][Ee][Dd])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_red}"
                             shift
-                            ;;
+                        ;;
                         ([Gg][Rr][Ee][Ee][Nn])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_green}"
                             shift
-                            ;;
+                        ;;
                         ([Yy][Ee][Ll][Ll][Oo][Ww])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_yellow}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Ll][Uu][Ee])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_blue}"
                             shift
-                            ;;
+                        ;;
                         ([Mm][Aa][Gg][Ee][Nn][Tt][Aa])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_magenta}"
                             shift
-                            ;;
+                        ;;
                         ([Cc][Yy][Aa][Nn])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_cyan}"
                             shift
-                            ;;
+                        ;;
                         ([Gg][Rr][Aa][Yy])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_gray}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Gg][Rr][Aa][Yy])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_bright_gray}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Rr][Ee][Dd])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_bright_red}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Gg][Rr][Ee][Ee][Nn])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_bright_green}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Yy][Ee][Ll][Ll][Oo][Ww])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_bright_yellow}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Bb][Ll][Uu][Ee])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_bright_blue}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Mm][Aa][Gg][Ee][Nn][Tt][Aa])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_bright_magenta}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Cc][Yy][Aa][Nn])
                             #echo "Foreground Color: $2"
                             local foreground_color_set="${text_fg_color_bright_cyan}"
                             shift
-                            ;;
+                        ;;
                         ( * )
                             echo 'error: unrecognized "'$2'" color.'
                             local num_arg_errors=$(($num_arg_errors+1))
-                            ;;
+                        ;;
                     esac
                 else
                     echo 'error: Foreground color not specified'
@@ -286,86 +287,86 @@ function message_maker() {
                             #echo "Background Color: $2"
                             background_color_set="${text_bg_color_white}"
                             shift
-                            ;;
-                                                ([Bb][Ll][Aa][Cc][Kk])
+                        ;;
+                        ([Bb][Ll][Aa][Cc][Kk])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_black}"
                             shift
-                            ;;
+                        ;;
                         ([Rr][Ee][Dd])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_red}"
                             shift
-                            ;;
+                        ;;
                         ([Gg][Rr][Ee][Ee][Nn])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_green}"
                             shift
-                            ;;
+                        ;;
                         ([Yy][Ee][Ll][Ll][Oo][Ww])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_yellow}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Ll][Uu][Ee])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_blue}"
                             shift
-                            ;;
+                        ;;
                         ([Mm][Aa][Gg][Ee][Nn][Tt][Aa])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_magenta}"
                             shift
-                            ;;
+                        ;;
                         ([Cc][Yy][Aa][Nn])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_cyan}"
                             shift
-                            ;;
+                        ;;
                         ([Gg][Rr][Aa][Yy])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_gray}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Gg][Rr][Aa][Yy])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_bright_gray}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Rr][Ee][Dd])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_bright_red}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Gg][Rr][Ee][Ee][Nn])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_bright_green}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Yy][Ee][Ll][Ll][Oo][Ww])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_bright_yellow}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Bb][Ll][Uu][Ee])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_bright_blue}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Mm][Aa][Gg][Ee][Nn][Tt][Aa])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_bright_magenta}"
                             shift
-                            ;;
+                        ;;
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Cc][Yy][Aa][Nn])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_bright_cyan}"
                             shift
-                            ;;
+                        ;;
                         ( * )
                             echo 'error: unrecognized "'$2'" color.'
                             local num_arg_errors=$(($num_arg_errors+1))
-                            ;;
+                        ;;
                     esac
                 else
                     echo 'error: Background color not specified'
@@ -379,66 +380,66 @@ function message_maker() {
                             #echo "Style: $2"
                             local style_set="${text_style_reset}"
                             shift
-                            ;;
+                        ;;
                         ( [Bb][Oo][Ll][Dd] )
                             #echo "Style: $2"
                             local style_set="${text_style_bold}"
                             shift
-                            ;;
+                        ;;
                         ( [Ff][Aa][Ii][Nn][Tt] )
                             #echo "Style: $2"
                             local style_set="${text_style_faint}"
                             shift
-                            ;;
+                        ;;
                         ( [Ii][Tt][Aa][Ll][Ii][Cc] )
                             #echo "Style: $2"
                             local style_set="${text_style_italic}"
                             shift
-                            ;;
+                        ;;
                         ( [Uu][Nn][Dd][Ee][Rr][Ll][Ii][Nn][Ee] )
                             #echo "Style: $2"
                             local style_set="${text_style_underline}"
                             shift
-                            ;;
+                        ;;
                         ( [Oo][Vv][Ee][Rr][Ll][Ii][Nn][Ee] )
                             #echo "Style: $2"
                             local style_set="${text_style_overline}"
                             shift
-                            ;;
+                        ;;
                         ( [Ss][Ll][Oo][Ww]_[Bb][Ll][Ii][Nn][Kk] )
                             #echo "Style: $2"
                             local style_set="${text_style_slow_blink}"
                             shift
-                            ;;
+                        ;;
                         ( [Rr][Aa][Pp][Ii][Dd]_[Bb][Ll][Ii][Nn][Kk] )
                             #echo "Style: $2"
                             local style_set="${text_style_rapid_blink}"
                             shift
-                            ;;
+                        ;;
                         ( [Ii][Nn][Vv][Ee][Rr][Tt] )
                             #echo "Style: $2"
                             local style_set="${text_style_invert}"
                             shift
-                            ;;
+                        ;;
                         ( [Hh][Ii][Dd][Ee] )
                             #echo "Style: $2"
                             local style_set="${text_style_hide}"
                             shift
-                            ;;
+                        ;;
                         ( [Ss][Tt][Rr][Ii][Kk][Ee] )
                             #echo "Style: $2"
                             local style_set="${text_style_strike}"
                             shift
-                            ;;
+                        ;;
                         ( [Dd][Oo][Uu][Bb][Ll][Ee]_[Uu][Nn][Dd][Ee][Rr][Ll][Ii][Nn][Ee] )
                             #echo "Style: $2"
                             local style_set="${text_style_double_underline}"
                             shift
-                            ;;
+                        ;;
                         ( * )
                             echo 'error: unrecognized "'$2'" style.'
                             local num_arg_errors=$(($num_arg_errors+1))
-                            ;;
+                        ;;
                     esac
                 else
                     echo 'error: Style not specified'
@@ -448,14 +449,20 @@ function message_maker() {
             ( "-msg"|"--msg"|"-message"|"--message" )
                 if [ -n "$2" ] && [[ "$2" != -* ]]; then
                     while [ -n "$2" ] && [[ "$2" != -* ]]; do
-                        if [ -z "${maked_message}" ] ; then
+                        # This while loop ensure that the complete message is defined
+                        # This is useful when using $* and not $@
+                        if [ -n "${TRIGGER_MESSAGE_SET}" ] ; then
                             if [ -z "${message_set}" ]; then
-                                local message_set="$2 "
+                                local message_set="$2"
+                                TRIGGER_MESSAGE_SET="1"
                             else
-                                local message_set="${message_set}$2 "
+                                local message_set="${message_set} "
+                                local message_set="${message_set}$2"
+                                TRIGGER_MESSAGE_SET="1"
                             fi
                         else
-                            local message_set="${message_set}$2 "
+                            local message_set="$2"
+                            TRIGGER_MESSAGE_SET="1"
                         fi
                         #echo "Message: $message_set"
                         shift
@@ -499,4 +506,4 @@ function message_maker() {
 
 }
 
-message_maker $*
+message_maker "$@"
