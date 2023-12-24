@@ -141,11 +141,11 @@ function full_help() {
     echo -e "${text_style_bold}OPTIONS:${text_style_reset}";
     echo "  -fgc, --fgc, -foreground_color, --foreground_color <color>"
     echo "      Foreground color.";
-    echo -e "      [possible values of <color>: ${text_fg_color_white}white${text_style_reset}, ${text_fg_color_black}black${text_style_reset}(black), ${text_fg_color_red}red${text_style_reset}, ${text_fg_color_green}green${text_style_reset}, ${text_fg_color_yellow}yellow${text_style_reset}, ${text_fg_color_blue}blue${text_style_reset}, ${text_fg_color_magenta}magenta${text_style_reset}, ${text_fg_color_cyan}cyan${text_style_reset}, ${text_fg_color_gray}gray${text_style_reset}, ${text_fg_color_bright_gray}bright_gray${text_style_reset}, ${text_fg_color_bright_red}bright_red${text_style_reset}, ${text_fg_color_bright_green}bright_green${text_style_reset}, ${text_fg_color_bright_yellow}bright_yellow${text_style_reset}, ${text_fg_color_bright_blue}bright_blue${text_style_reset}, ${text_fg_color_bright_magenta}bright_magenta${text_style_reset}, ${text_fg_color_bright_cyan}bright_cyan${text_style_reset}, ${text_fg_color_red}r${text_fg_color_green}g${text_fg_color_blue}b${text_fg_color_white}(24-bit RGB 0-255)${text_style_reset}, underline_${text_style_underline}${csi_esc}58;2;255;0;0mr${csi_esc}58;2;0;255;0mg${csi_esc}58;2;0;0;255mb${text_style_reset}(24-bit RGB 0-255)";  
+    echo -e "      [possible values of <color>: ${text_fg_color_white}white${text_style_reset}, ${text_fg_color_black}black${text_style_reset}(black), ${text_fg_color_red}red${text_style_reset}, ${text_fg_color_green}green${text_style_reset}, ${text_fg_color_yellow}yellow${text_style_reset}, ${text_fg_color_blue}blue${text_style_reset}, ${text_fg_color_magenta}magenta${text_style_reset}, ${text_fg_color_cyan}cyan${text_style_reset}, ${text_fg_color_gray}gray${text_style_reset}, ${text_fg_color_bright_gray}bright_gray${text_style_reset}, ${text_fg_color_bright_red}bright_red${text_style_reset}, ${text_fg_color_bright_green}bright_green${text_style_reset}, ${text_fg_color_bright_yellow}bright_yellow${text_style_reset}, ${text_fg_color_bright_blue}bright_blue${text_style_reset}, ${text_fg_color_bright_magenta}bright_magenta${text_style_reset}, ${text_fg_color_bright_cyan}bright_cyan${text_style_reset}, ${text_fg_color_red}r${text_fg_color_green}g${text_fg_color_blue}b${text_fg_color_white} <255,255,255>${text_style_reset}, underline_${text_style_underline}${csi_esc}58;2;255;0;0mr${csi_esc}58;2;0;255;0mg${csi_esc}58;2;0;0;255mb${text_style_reset} <255,255,255>";  
     echo "  -bgc, --bgc, -background_color, --background_color <color>"
     echo "      Background color.";
     echo "      [default: black]"
-    echo -e "      [possible values of <color>: ${text_bg_color_white}white${text_style_reset}(white), ${text_bg_color_black}black${text_style_reset}, ${text_bg_color_red}red${text_style_reset}, ${text_bg_color_green}green${text_style_reset}, ${text_bg_color_yellow}yellow${text_style_reset}, ${text_bg_color_blue}blue${text_style_reset}, ${text_bg_color_magenta}magenta${text_style_reset}, ${text_bg_color_cyan}cyan${text_style_reset}, ${text_bg_color_gray}gray${text_style_reset}, ${text_bg_color_bright_gray}bright_gray${text_style_reset}, ${text_bg_color_bright_red}bright_red${text_style_reset}, ${text_bg_color_bright_green}bright_green${text_style_reset}, ${text_bg_color_bright_yellow}bright_yellow${text_style_reset}, ${text_bg_color_bright_blue}bright_blue${text_style_reset}, ${text_bg_color_bright_magenta}bright_magenta${text_style_reset}, ${text_bg_color_bright_cyan}bright_cyan${text_style_reset}, ${text_bg_color_red}r${text_bg_color_green}g${text_bg_color_blue}b${text_style_reset}(24-bit RGB 0-255)";  
+    echo -e "      [possible values of <color>: ${text_bg_color_white}white${text_style_reset}(white), ${text_bg_color_black}black${text_style_reset}, ${text_bg_color_red}red${text_style_reset}, ${text_bg_color_green}green${text_style_reset}, ${text_bg_color_yellow}yellow${text_style_reset}, ${text_bg_color_blue}blue${text_style_reset}, ${text_bg_color_magenta}magenta${text_style_reset}, ${text_bg_color_cyan}cyan${text_style_reset}, ${text_bg_color_gray}gray${text_style_reset}, ${text_bg_color_bright_gray}bright_gray${text_style_reset}, ${text_bg_color_bright_red}bright_red${text_style_reset}, ${text_bg_color_bright_green}bright_green${text_style_reset}, ${text_bg_color_bright_yellow}bright_yellow${text_style_reset}, ${text_bg_color_bright_blue}bright_blue${text_style_reset}, ${text_bg_color_bright_magenta}bright_magenta${text_style_reset}, ${text_bg_color_bright_cyan}bright_cyan${text_style_reset}, ${text_bg_color_red}r${text_bg_color_green}g${text_bg_color_blue}b${text_style_reset} <255,255,255>";  
     echo "  -es, --es, -enable_style, --enable_style <style>"
     echo "      Enable Style of text.";
     echo "      [default: reset]"
@@ -164,7 +164,8 @@ function full_help() {
     echo "      Show Full Help message.";
     echo "";
     echo -e "${text_style_bold}EXAMPLES:${text_style_reset}";
-    echo "  $(echo $0) --fgc red -bgc white --enable_style rapid_blink -msg \"Hello World!\"";
+    echo "  ./shell_color.sh --fgc red -bgc white --enable_style rapid_blink -msg \"Hello World!\"";
+    echo "  ./shell_color.sh -fgc rgb 255,0,0 -bgc rgb 255,255,255 -es bold -msg \"RICK0X00\"";
     echo "";
 }
 
@@ -270,6 +271,97 @@ function message_maker() {
                             local foreground_color_set="${text_fg_color_bright_cyan}"
                             shift
                         ;;
+                        ([Uu][Nn][Dd][Ee][Rr][Ll][Ii][Nn][Ee]_[Rr][Gg][Bb])
+                            shift
+                            #echo "Foreground Color: $2"
+
+                            function setting_rgb_color() {
+                                # setting rgb color
+                                rgb_color_to_set="$1"
+                                if [ -n "$rgb_color_to_set" ] && [[ "$rgb_color_to_set" != -* ]]; then
+                                    #echo "RGB color to set: $rgb_color_to_set"
+
+                                    local rgb_color_red_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $1}')"
+                                    local rgb_color_green_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $2}')"
+                                    local rgb_color_blue_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $3}')"
+
+                                    function rgb_color_check() {
+                                        # 24 bit RGB color check
+                                        local number=$1
+                                        # check if the number is inside 0-255
+                                        if [ $number -ge 0 ] && [ $number -le 255 ]; then
+                                            echo "RGB color $number is a valid number" > /dev/null
+                                        else
+                                            echo "ERROR: INVALID RGB number"
+                                            exit 1
+                                        fi
+                                    }
+                                    rgb_color_check ${rgb_color_red_num_set}
+                                    rgb_color_check ${rgb_color_green_num_set}
+                                    rgb_color_check ${rgb_color_blue_num_set}
+
+                                    r_value_color=${rgb_color_red_num_set}
+                                    g_value_color=${rgb_color_green_num_set}
+                                    b_value_color=${rgb_color_blue_num_set}
+
+                                else
+                                    #echo 'error: RGB color not specified'
+                                    local num_arg_errors=$(($num_arg_errors+1));
+                                    exit 1
+                                fi
+                            }
+                            setting_rgb_color "$2"
+
+                            local text_style_underline_color_rgb="${csi_esc}58;2;${r_value_color};${g_value_color};${b_value_color}m" # 24-bit RGB 0-255 values set color
+
+                            local foreground_color_set="${text_style_underline_color_rgb}"
+                            shift
+                        ;;
+                        ([Rr][Gg][Bb])
+                            shift
+                            #echo "Foreground Color: $2"
+
+                            function setting_rgb_color() {
+                                # setting rgb color
+                                rgb_color_to_set="$1"
+                                if [ -n "$rgb_color_to_set" ] && [[ "$rgb_color_to_set" != -* ]]; then
+                                    #echo "RGB color to set: $rgb_color_to_set"
+
+                                    local rgb_color_red_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $1}')"
+                                    local rgb_color_green_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $2}')"
+                                    local rgb_color_blue_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $3}')"
+
+                                    function rgb_color_check() {
+                                        # 24 bit RGB color check
+                                        local number=$1
+                                        # check if the number is inside 0-255
+                                        if [ $number -ge 0 ] && [ $number -le 255 ]; then
+                                            echo "RGB color $number is a valid number" > /dev/null
+                                        else
+                                            echo "ERROR: INVALID RGB number"
+                                            exit 1
+                                        fi
+                                    }
+                                    rgb_color_check ${rgb_color_red_num_set}
+                                    rgb_color_check ${rgb_color_green_num_set}
+                                    rgb_color_check ${rgb_color_blue_num_set}
+
+                                    r_value_color=${rgb_color_red_num_set}
+                                    g_value_color=${rgb_color_green_num_set}
+                                    b_value_color=${rgb_color_blue_num_set}
+
+                                else
+                                    #echo 'error: RGB color not specified'
+                                    local num_arg_errors=$(($num_arg_errors+1));
+                                    exit 1
+                                fi
+                            }
+                            setting_rgb_color "$2"
+
+                            local text_fg_color_rgb="${csi_esc}38;2;${r_value_color};${g_value_color};${b_value_color}m" # 24-bit RGB 0-255 
+                            local foreground_color_set="${text_fg_color_rgb}"
+                            shift
+                        ;;
                         ( * )
                             echo 'error: unrecognized "'$2'" color.'
                             local num_arg_errors=$(($num_arg_errors+1))
@@ -361,6 +453,52 @@ function message_maker() {
                         ([Bb][Rr][Ii][Gg][Hh][Tt]_[Cc][Yy][Aa][Nn])
                             #echo "Background Color: $2"
                             local background_color_set="${text_bg_color_bright_cyan}"
+                            shift
+                        ;;
+                        ([Rr][Gg][Bb])
+                            shift
+                            #echo "Background Color: $2"
+
+                            function setting_rgb_color() {
+                                # setting rgb color
+                                rgb_color_to_set="$1"
+                                if [ -n "$rgb_color_to_set" ] && [[ "$rgb_color_to_set" != -* ]]; then
+                                    #echo "RGB color to set: $rgb_color_to_set"
+
+                                    local rgb_color_red_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $1}')"
+                                    local rgb_color_green_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $2}')"
+                                    local rgb_color_blue_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $3}')"
+
+                                    function rgb_color_check() {
+                                        # 24 bit RGB color check
+                                        local number=$1
+                                        # check if the number is inside 0-255
+                                        if [ $number -ge 0 ] && [ $number -le 255 ]; then
+                                            echo "RGB color $number is a valid number" > /dev/null
+                                        else
+                                            echo "ERROR: INVALID RGB number"
+                                            exit 1
+                                        fi
+                                    }
+                                    rgb_color_check ${rgb_color_red_num_set}
+                                    rgb_color_check ${rgb_color_green_num_set}
+                                    rgb_color_check ${rgb_color_blue_num_set}
+
+                                    r_value_color=${rgb_color_red_num_set}
+                                    g_value_color=${rgb_color_green_num_set}
+                                    b_value_color=${rgb_color_blue_num_set}
+
+                                else
+                                    #echo 'error: RGB color not specified'
+                                    local num_arg_errors=$(($num_arg_errors+1));
+                                    exit 1
+                                fi
+                            }
+                            setting_rgb_color "$2"
+
+                            local text_bg_color_rgb="${csi_esc}48;2;${r_value_color};${g_value_color};${b_value_color}m" # 24-bit RGB 0-255 values set color
+
+                            local background_color_set="${text_bg_color_rgb}"
                             shift
                         ;;
                         ( * )
