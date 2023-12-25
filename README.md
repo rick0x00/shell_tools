@@ -34,10 +34,9 @@ Basic System Information extrator
 
 ![network_info](network_info.png)
 
-## [shell color](/shell_color.sh)
+## [Text format](/text_format/README.md)
 
-![shell_color](shell_color-execution.png)
-![shell_color_help](shell_color-help.png)
+Basic text color and formatter to shell CLI
 
 ## [Shell UIX](/shell_uix.sh)
 
