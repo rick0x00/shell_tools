@@ -3,7 +3,7 @@
 # ============================================================ #
 # Tool Created date: 12 dez 2023                               #
 # Tool Created by: Henrique Silva (rick.0x00@gmail.com)        #
-# Tool Name: shell_color                                       #
+# Tool Name: text_format                                       #
 # Description: basic shell text color/style edit               #
 # License: MIT License                                         #
 # Remote repository 1: https://github.com/rick0x00/shell_tools #
@@ -164,8 +164,8 @@ function text_format_full_help() {
     echo "      Show Full Help message.";
     echo "";
     echo -e "${text_style_bold}EXAMPLES:${text_style_reset}";
-    echo "  ./shell_color.sh --fgc red -bgc white --enable_style rapid_blink -msg \"Hello World\"";
-    echo "  ./shell_color.sh -fgc rgb 0,100,255 -bgc rgb 255,255,255 -es bold -msg \"RICK0X00\"";
+    echo "  ./text_format.sh --fgc red -bgc white --enable_style rapid_blink -msg \"Hello World\"";
+    echo "  ./text_format.sh -fgc rgb 0,100,255 -bgc rgb 255,255,255 -es bold -msg \"RICK0X00\"";
     echo "";
 }
 
