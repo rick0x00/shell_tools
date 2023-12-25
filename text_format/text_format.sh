@@ -14,7 +14,7 @@
 
 
 
-function set_variables_values() {
+function text_format_set_variables_values() {
     ### message
     text_msg="lorem ipsum dolor sit amet"
 
@@ -123,14 +123,14 @@ function set_variables_values() {
     }
     set_variables_styles
 }
-set_variables_values
+text_format_set_variables_values
 
-function short_help() {
+function text_format_short_help() {
     echo -e "usage:\n    $(echo $0) [OPTIONS] <OBJECT>"
     echo "execute  \"$(echo $0) --help\" to get more information...";
 }
 
-function full_help() {
+function text_format_full_help() {
     echo "";
     echo -e "${text_style_bold}DESCRIPTION:${text_style_reset}";
     echo "  tool to format text.";
@@ -164,27 +164,63 @@ function full_help() {
     echo "      Show Full Help message.";
     echo "";
     echo -e "${text_style_bold}EXAMPLES:${text_style_reset}";
-    echo "  ./shell_color.sh --fgc red -bgc white --enable_style rapid_blink -msg \"Hello World!\"";
-    echo "  ./shell_color.sh -fgc rgb 255,0,0 -bgc rgb 255,255,255 -es bold -msg \"RICK0X00\"";
+    echo "  ./shell_color.sh --fgc red -bgc white --enable_style rapid_blink -msg \"Hello World\"";
+    echo "  ./shell_color.sh -fgc rgb 0,100,255 -bgc rgb 255,255,255 -es bold -msg \"RICK0X00\"";
     echo "";
 }
 
-function message_maker() {
+function text_format_message_maker() {
     #echo "imputed args: $@"
     text_format_function_args="$@"
     if [ -z "${text_format_function_args}" ]; then
         echo "Error, no options specified"
-        short_help;
+        text_format_short_help;
         exit 0;
     fi
+
+    function setting_rgb_color() {
+        # setting rgb color
+        rgb_color_to_set="$1"
+        if [ -n "$rgb_color_to_set" ] && [[ "$rgb_color_to_set" != -* ]]; then
+            #echo "RGB color to set: $rgb_color_to_set"
+
+            local rgb_color_red_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $1}')"
+            local rgb_color_green_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $2}')"
+            local rgb_color_blue_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $3}')"
+
+            function rgb_color_check() {
+                # 24 bit RGB color check
+                local number=$1
+                # check if the number is inside 0-255
+                if [ $number -ge 0 ] && [ $number -le 255 ]; then
+                    echo "RGB color $number is a valid number" > /dev/null
+                else
+                    echo "ERROR: INVALID RGB number"
+                    exit 1
+                fi
+            }
+            rgb_color_check ${rgb_color_red_num_set}
+            rgb_color_check ${rgb_color_green_num_set}
+            rgb_color_check ${rgb_color_blue_num_set}
+
+            r_value_color=${rgb_color_red_num_set}
+            g_value_color=${rgb_color_green_num_set}
+            b_value_color=${rgb_color_blue_num_set}
+
+        else
+            #echo 'error: RGB color not specified'
+            local num_arg_errors=$(($num_arg_errors+1));
+            exit 1
+        fi
+    }
 
     ## read CLI Args
     while [ -n "$1" ]; do
         if [ "$1" == "-h" ]; then
-            short_help;
+            text_format_short_help;
             exit 0;
         elif [ "$1" == "-H" ] || [ "$1" == "--help" ]; then
-            full_help;
+            text_format_full_help;
             exit 0;
         fi
         case $1 in
@@ -275,41 +311,6 @@ function message_maker() {
                             shift
                             #echo "Foreground Color: $2"
 
-                            function setting_rgb_color() {
-                                # setting rgb color
-                                rgb_color_to_set="$1"
-                                if [ -n "$rgb_color_to_set" ] && [[ "$rgb_color_to_set" != -* ]]; then
-                                    #echo "RGB color to set: $rgb_color_to_set"
-
-                                    local rgb_color_red_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $1}')"
-                                    local rgb_color_green_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $2}')"
-                                    local rgb_color_blue_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $3}')"
-
-                                    function rgb_color_check() {
-                                        # 24 bit RGB color check
-                                        local number=$1
-                                        # check if the number is inside 0-255
-                                        if [ $number -ge 0 ] && [ $number -le 255 ]; then
-                                            echo "RGB color $number is a valid number" > /dev/null
-                                        else
-                                            echo "ERROR: INVALID RGB number"
-                                            exit 1
-                                        fi
-                                    }
-                                    rgb_color_check ${rgb_color_red_num_set}
-                                    rgb_color_check ${rgb_color_green_num_set}
-                                    rgb_color_check ${rgb_color_blue_num_set}
-
-                                    r_value_color=${rgb_color_red_num_set}
-                                    g_value_color=${rgb_color_green_num_set}
-                                    b_value_color=${rgb_color_blue_num_set}
-
-                                else
-                                    #echo 'error: RGB color not specified'
-                                    local num_arg_errors=$(($num_arg_errors+1));
-                                    exit 1
-                                fi
-                            }
                             setting_rgb_color "$2"
 
                             local text_style_underline_color_rgb="${csi_esc}58;2;${r_value_color};${g_value_color};${b_value_color}m" # 24-bit RGB 0-255 values set color
@@ -321,41 +322,6 @@ function message_maker() {
                             shift
                             #echo "Foreground Color: $2"
 
-                            function setting_rgb_color() {
-                                # setting rgb color
-                                rgb_color_to_set="$1"
-                                if [ -n "$rgb_color_to_set" ] && [[ "$rgb_color_to_set" != -* ]]; then
-                                    #echo "RGB color to set: $rgb_color_to_set"
-
-                                    local rgb_color_red_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $1}')"
-                                    local rgb_color_green_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $2}')"
-                                    local rgb_color_blue_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $3}')"
-
-                                    function rgb_color_check() {
-                                        # 24 bit RGB color check
-                                        local number=$1
-                                        # check if the number is inside 0-255
-                                        if [ $number -ge 0 ] && [ $number -le 255 ]; then
-                                            echo "RGB color $number is a valid number" > /dev/null
-                                        else
-                                            echo "ERROR: INVALID RGB number"
-                                            exit 1
-                                        fi
-                                    }
-                                    rgb_color_check ${rgb_color_red_num_set}
-                                    rgb_color_check ${rgb_color_green_num_set}
-                                    rgb_color_check ${rgb_color_blue_num_set}
-
-                                    r_value_color=${rgb_color_red_num_set}
-                                    g_value_color=${rgb_color_green_num_set}
-                                    b_value_color=${rgb_color_blue_num_set}
-
-                                else
-                                    #echo 'error: RGB color not specified'
-                                    local num_arg_errors=$(($num_arg_errors+1));
-                                    exit 1
-                                fi
-                            }
                             setting_rgb_color "$2"
 
                             local text_fg_color_rgb="${csi_esc}38;2;${r_value_color};${g_value_color};${b_value_color}m" # 24-bit RGB 0-255 
@@ -459,41 +425,6 @@ function message_maker() {
                             shift
                             #echo "Background Color: $2"
 
-                            function setting_rgb_color() {
-                                # setting rgb color
-                                rgb_color_to_set="$1"
-                                if [ -n "$rgb_color_to_set" ] && [[ "$rgb_color_to_set" != -* ]]; then
-                                    #echo "RGB color to set: $rgb_color_to_set"
-
-                                    local rgb_color_red_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $1}')"
-                                    local rgb_color_green_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $2}')"
-                                    local rgb_color_blue_num_set="$(echo $rgb_color_to_set | awk -F',' '{print $3}')"
-
-                                    function rgb_color_check() {
-                                        # 24 bit RGB color check
-                                        local number=$1
-                                        # check if the number is inside 0-255
-                                        if [ $number -ge 0 ] && [ $number -le 255 ]; then
-                                            echo "RGB color $number is a valid number" > /dev/null
-                                        else
-                                            echo "ERROR: INVALID RGB number"
-                                            exit 1
-                                        fi
-                                    }
-                                    rgb_color_check ${rgb_color_red_num_set}
-                                    rgb_color_check ${rgb_color_green_num_set}
-                                    rgb_color_check ${rgb_color_blue_num_set}
-
-                                    r_value_color=${rgb_color_red_num_set}
-                                    g_value_color=${rgb_color_green_num_set}
-                                    b_value_color=${rgb_color_blue_num_set}
-
-                                else
-                                    #echo 'error: RGB color not specified'
-                                    local num_arg_errors=$(($num_arg_errors+1));
-                                    exit 1
-                                fi
-                            }
                             setting_rgb_color "$2"
 
                             local text_bg_color_rgb="${csi_esc}48;2;${r_value_color};${g_value_color};${b_value_color}m" # 24-bit RGB 0-255 values set color
@@ -611,11 +542,11 @@ function message_maker() {
                 fi
                 ;;
             ( "-h" )
-                short_help
+                text_format_short_help
                 exit 0
                 ;;
             ( "-H"|"--help" )
-                full_help
+                text_format_full_help
                 exit 0
                 ;;
             ( * )
@@ -644,4 +575,4 @@ function message_maker() {
 
 }
 
-message_maker "$@"
+text_format_message_maker "$@"
