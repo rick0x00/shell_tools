@@ -2,43 +2,38 @@
 
 Scripts for help in the creation shell scripts
 
-## [Status Bar](/status_bar.sh)
+## [Status Bar](/status_bar/README.md)
 
 shell status(progress and task) bar
 
-![status_bar_preview](/status_bar_preview.gif)
-
-## [Read CLI Args](/read_cli_args.sh)
+## [Read CLI Args](/read_cli_args/README.md)
 
 Basic Shell Read CLI Arguments
 
-## [Logger](/logger.sh)
+## [Logger](/logger/README.md)
 
 Basic Logger for projects
 
-## [Help](/help.sh)
+## [Help](/help/README.md)
 
 Basic Structure for help arguments
 
-## [Project info](/project_info.sh)
+## [Project info](/project_info/README.md)
 
 Basic project info for projects
 
-## [System Info](/system_info.sh)
+## [System Info](/system_info/README.md)
 
 Basic System Information extrator
 
-![system_info_preview](/system_info_preview.png)
+## [Network Info](/network_info/README.md)
 
-## [Network Info](/network_info.sh)
-
-![network_info](network_info.png)
+Basic Network Information extrator
 
 ## [Text format](/text_format/README.md)
 
 Basic text color and formatter to shell CLI
 
-## [Shell UIX](/shell_uix.sh)
+## [Shell UIX](/shell_uix/README.md)
 
 All tools manager
-(developing...)
