@@ -150,10 +150,10 @@ function text_format_full_help() {
     echo "      Enable Style of text.";
     echo "      [default: reset]"
     echo -e "      [possible values of <style>: ${text_style_reset}reset${text_style_reset}, ${text_style_bold}bold${text_style_reset}, ${text_style_faint}faint${text_style_reset}, ${text_style_italic}italic${text_style_reset}, ${text_style_underline}underline${text_style_reset}, ${text_style_overline}overline${text_style_reset}, ${text_style_rapid_blink}rapid_blink${text_style_reset}, ${text_style_slow_blink}slow_blink${text_style_reset}, ${text_style_invert}invert${text_style_reset}, ${text_style_hide}hide${text_style_reset}(hide), ${text_style_strike}strike${text_style_reset}, ${text_style_double_underline}double_underline${text_style_reset}";
-    #echo "  -ds, --ds, -disable_style, --disable_style <style>"
-    #echo "      Disable Style of text.";
-    #echo "      [default: bold]"
-    #echo "      [possible values of <style>: bold, faint, italic, underline, overline, blink, invert, hide, strike, double_underline";
+    echo "  -ds, --ds, -disable_style, --disable_style <style>"
+    echo "      Disable Style of text.";
+    echo "      [default: bold]"
+    echo -e "      [possible values of <style>: ${text_style_bold}bold${text_style_reset}, ${text_style_italic}italic${text_style_reset}, ${text_style_underline}underline${text_style_reset}, ${text_style_overline}overline${text_style_reset}, ${text_style_slow_blink}blink${text_style_reset}, ${text_style_invert}invert${text_style_reset}, ${text_style_hide}hide${text_style_reset}(hide), ${text_style_strike}strike${text_style_reset}";
     echo "  -msg, --msg, -message, --message \"<text>\""
     echo "      Define the text of format.";
     echo "      [default: not defined]"
@@ -515,6 +515,59 @@ function text_format_message_maker() {
                     local num_arg_errors=$(($num_arg_errors+1));
                 fi
                 ;;
+            ( "-ds"|"--ds"|"-disable_style"|"--disable_style" )
+                if [ -n "$2" ] && [[ "$2" != -* ]]; then
+                    case $2 in
+                        ( [Bb][Oo][Ll][Dd] )
+                            #echo "Disable Style: $2"
+                            local style_off_set="${text_style_off_bold}"
+                            shift
+                        ;;
+                        ( [Ii][Tt][Aa][Ll][Ii][Cc] )
+                            #echo "Disable Style: $2"
+                            local style_off_set="${text_style_off_italic}"
+                            shift
+                        ;;
+                        ( [Uu][Nn][Dd][Ee][Rr][Ll][Ii][Nn][Ee] )
+                            #echo "Disable Style: $2"
+                            local style_off_set="${text_style_off_underline}"
+                            shift
+                        ;;
+                        ( [Oo][Vv][Ee][Rr][Ll][Ii][Nn][Ee] )
+                            #echo "Disable Style: $2"
+                            local style_off_set="${text_style_off_overline}"
+                            shift
+                        ;;
+                        ( [Bb][Ll][Ii][Nn][Kk] )
+                            #echo "Disable Style: $2"
+                            local style_off_set="${text_style_off_blink}"
+                            shift
+                        ;;
+                        ( [Ii][Nn][Vv][Ee][Rr][Tt] )
+                            #echo "Disable Style: $2"
+                            local style_off_set="${text_style_off_invert}"
+                            shift
+                        ;;
+                        ( [Hh][Ii][Dd][Ee] )
+                            #echo "Disable Style: $2"
+                            local style_off_set="${text_style_off_hide}"
+                            shift
+                        ;;
+                        ( [Ss][Tt][Rr][Ii][Kk][Ee] )
+                            #echo "Disable Style: $2"
+                            local style_off_set="${text_style_off_strike}"
+                            shift
+                        ;;
+                        ( * )
+                            echo 'error: unrecognized "'$2'" style.'
+                            local num_arg_errors=$(($num_arg_errors+1))
+                        ;;
+                    esac
+                else
+                    echo 'error: Style not specified'
+                    local num_arg_errors=$(($num_arg_errors+1));
+                fi
+                ;;
             ( "-msg"|"--msg"|"-message"|"--message" )
                 if [ -n "$2" ] && [[ "$2" != -* ]]; then
                     while [ -n "$2" ] && [[ "$2" != -* ]]; do
@@ -556,11 +609,12 @@ function text_format_message_maker() {
         esac
         shift
 
-        maked_message="${maked_message}${foreground_color_set}${background_color_set}${style_set}${message_set}"
+        maked_message="${maked_message}${foreground_color_set}${background_color_set}${style_set}${style_off_set}${message_set}"
 
         unset foreground_color_set
         unset background_color_set
         unset style_set
+        unset style_off_set
         unset message_set
 
     done
