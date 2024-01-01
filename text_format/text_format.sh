@@ -158,6 +158,9 @@ function text_format_full_help() {
     echo "      Define the text of format.";
     echo "      [default: not defined]"
     echo "      [possible values of <text>: all available(every use the syntax \"<text>\" to define a message to format";
+    echo "  -enrs, --enrs, -exit_not_reset_style, --exit_not_reset_style";
+    echo "      exit of this tool not reset style defined."
+    echo "      [default: not seted]"
     echo "  -h";
     echo "      Show short help message."
     echo "  -H, --help"
@@ -594,6 +597,11 @@ function text_format_message_maker() {
                     local num_arg_errors=$(($num_arg_errors+1));
                 fi
                 ;;
+            ( "-enrs"|"--enrs"|"-exit_not_reset_style"|"--exit_not_reset_style" )
+                #echo "seted: exit not reset style"
+                local exit_not_reset_style="yes"
+                #shift
+                ;;
             ( "-h" )
                 text_format_short_help
                 exit 0
@@ -624,9 +632,32 @@ function text_format_message_maker() {
         exit 1;    
     fi
 
-    # output the maked message
-    echo -e "${maked_message}${text_style_reset}"
+    if [ -n ${exit_not_reset_style} ]; then
+        # some value is seted to ${exit_not_reset_style}
+        if [ "yes" == "${exit_not_reset_style}" ]; then
+            #echo "text style reset seted value: yes"
+            local exit_style='\c'
+            # output the maked message
+            #echo -e "${maked_message}${exit_style}"
+        #else
+        #    echo "ERROR: text style reset value unrecognized"
+        #    exit 1;
+        fi
+    else
+        if [ -n "${TRIGGER_MESSAGE_SET}" ]; then
+            local exit_style="${text_style_reset}"
+            # output the maked message
+            #echo -e "${maked_message}${exit_style}"
+        else
+            local exit_style='\c'
+            # output the maked message
+            #echo -e "${maked_message}${exit_style}"
+        fi
+    fi
 
+    # output the maked message
+    echo -e "${maked_message}${exit_style}"
+    exit 0
 }
 
 text_format_message_maker "$@"
