@@ -632,11 +632,13 @@ function text_format_message_maker() {
         exit 1;    
     fi
 
+
+    # check if you should reset the formatting when exiting the command
     if [ -n ${exit_not_reset_style} ]; then
         # some value is seted to ${exit_not_reset_style}
         if [ "yes" == "${exit_not_reset_style}" ]; then
             #echo "text style reset seted value: yes"
-            local exit_style='\c'
+            local exit_style=''
             # output the maked message
             #echo -e "${maked_message}${exit_style}"
         #else
@@ -644,19 +646,20 @@ function text_format_message_maker() {
         #    exit 1;
         fi
     else
+        # check if message is defined, if yes, set to reset style when exiting the command
         if [ -n "${TRIGGER_MESSAGE_SET}" ]; then
             local exit_style="${text_style_reset}"
             # output the maked message
             #echo -e "${maked_message}${exit_style}"
         else
-            local exit_style='\c'
+            local exit_style=''
             # output the maked message
             #echo -e "${maked_message}${exit_style}"
         fi
     fi
 
     # output the maked message
-    echo -e "${maked_message}${exit_style}"
+    echo -en "${maked_message}${exit_style}"
     exit 0
 }
 
