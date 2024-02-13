@@ -118,11 +118,31 @@ function backup_mgmt_option_setting() {
                     local num_arg_errors=$(($num_arg_errors+1));
                 fi
                 ;;
-            ( "-enrs"|"--enrs"|"-exit_not_reset_style"|"--exit_not_reset_style" )
-                #echo "seted: exit not reset style"
-                local exit_not_reset_style="yes"
-                #shift
-                ;;
+            ( "-r"|"--r"|"-retention"|"--retention" )
+                if [ -n "$2" ] && [[ "$2" != -* ]]; then
+                    while [ -n "$2" ] && [[ "$2" != -* ]]; do
+                        # This while loop ensure that the complete message is defined
+                        # This is useful when using $* and not $@
+                        if [ -n "${TRIGGER_BACKUP_RETENTION_SET}" ] ; then
+                            if [ -z "${backup_retention_set}" ]; then
+                                local backup_retention_set="$2"
+                                TRIGGER_BACKUP_RETENTION_SET="1"
+                            else
+                                echo 'error: retention already specified'
+                                local num_arg_errors=$(($num_arg_errors+1));
+                            fi
+                        else
+                            local backup_retention_set="$2"
+                            TRIGGER_BACKUP_RETENTION_SET="1"
+                        fi
+                        echo "retention set: $backup_retention_set"
+                        shift
+                    done
+                else
+                    echo 'error: retention not specified'
+                    local num_arg_errors=$(($num_arg_errors+1));
+                fi
+                ;; 
             ( "-h" )
                 backup_mgmt_short_help
                 exit 0
@@ -148,6 +168,7 @@ function backup_mgmt_option_setting() {
 
     echo "backup_source_set: $backup_source_set"
     echo "backup_destination_set: $backup_destination_set"
+    echo "backup_retention_set: $backup_retention_set"
     
     
 
