@@ -85,7 +85,7 @@ function backup_mgmt_option_setting() {
                             local backup_source_set="$2"
                             TRIGGER_BACKUP_SOURCE_SET="1"
                         fi
-                        echo "Source set: $backup_source_set"
+                        #echo "Source set: $backup_source_set"
                         shift
                     done
                 else
@@ -110,7 +110,7 @@ function backup_mgmt_option_setting() {
                             local backup_destination_set="$2"
                             TRIGGER_BACKUP_DESTINATION_SET="1"
                         fi
-                        echo "destination set: $backup_destination_set"
+                        #echo "destination set: $backup_destination_set"
                         shift
                     done
                 else
@@ -135,7 +135,7 @@ function backup_mgmt_option_setting() {
                             local backup_retention_set="$2"
                             TRIGGER_BACKUP_RETENTION_SET="1"
                         fi
-                        echo "retention set: $backup_retention_set"
+                        #echo "retention set: $backup_retention_set"
                         shift
                     done
                 else
@@ -167,13 +167,14 @@ function backup_mgmt_option_setting() {
     # output the defined options
 
     echo "backup_source_set: $backup_source_set"
+    export BACKUP_SOURCE="${backup_source_set}"
     echo "backup_destination_set: $backup_destination_set"
+    export BACKUP_DESTINATION="${backup_destination_set}"
     echo "backup_retention_set: $backup_retention_set"
-    
-    
+    export BACKUP_RETENTION="${backup_retention_set}"
 
-    exit 0
+    return 0
 }
 
-
 backup_mgmt_option_setting $@
+
