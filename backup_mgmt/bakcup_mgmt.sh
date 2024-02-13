@@ -176,5 +176,23 @@ function backup_mgmt_option_setting() {
     return 0
 }
 
+function backup_create() {
+    echo "## CREATING BACKUP"
+    function backup_create_file(){
+        echo "# CREATING BACKUP FILE"
+    }
+    function backup_create_log(){
+        echo "# CREATING LOG FILE"
+    }
+}
+
+function backup_retention() {
+    echo "## SETTING RETENTION OF BACKUPS"
+}
+
+
+
 backup_mgmt_option_setting $@
 
+backup_create
+backup_retention
