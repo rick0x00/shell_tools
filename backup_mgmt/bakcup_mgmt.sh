@@ -103,9 +103,8 @@ function backup_mgmt_option_setting() {
                                 local backup_destination_set="$2"
                                 TRIGGER_BACKUP_DESTINATION_SET="1"
                             else
-                                local backup_destination_set="${backup_destination_set} "
-                                local backup_destination_set="${backup_destination_set}$2"
-                                TRIGGER_BACKUP_DESTINATION_SET="1"
+                                echo 'error: destination already specified'
+                                local num_arg_errors=$(($num_arg_errors+1));
                             fi
                         else
                             local backup_destination_set="$2"
